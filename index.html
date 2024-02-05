@@ -16,29 +16,24 @@
       font-family: sans-serif;
       background-color: #ededed;
     }
-    polaris-chip {
+    my-card {
       margin: 16px;
     }
   </style>
-  <title>Polaris-chip / My-card</title>
+  <title>U. S. Presidents</title>
 </head>
 
 <body>
-  <h1>polaris-chip</h1>
+  <h1>Mount Rushmore</h1>
   <!-- this is going to do whatever the tag's defaults are -->
-  <polaris-chip title="News of Record"></polaris-chip>
-  <polaris-chip title="Faculty and Staff"></polaris-chip>
-  <polaris-chip title="Sports are the Only Thing that Matter"></polaris-chip>
-  <polaris-chip title="Grants and Donations"></polaris-chip>
+  <my-card title="George Washington" link="https://en.wikipedia.org/wiki/George_Washington" width = "250" length = "300" image = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Gilbert_Stuart_Williamstown_Portrait_of_George_Washington.jpg/330px-Gilbert_Stuart_Williamstown_Portrait_of_George_Washington.jpg"></my-card>
+  <my-card title="Thomas Jefferson" link="https://en.wikipedia.org/wiki/Thomas_Jefferson" width = "250" length = "300" image="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Official_Presidential_portrait_of_Thomas_Jefferson_%28by_Rembrandt_Peale%2C_1800%29%28cropped%29.jpg/330px-Official_Presidential_portrait_of_Thomas_Jefferson_%28by_Rembrandt_Peale%2C_1800%29%28cropped%29.jpg" ></my-card>
+  <my-card title="Abraham Lincoln" link="https://en.wikipedia.org/wiki/Abraham_Lincoln" width = "250" length = "300" image ="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Abraham_Lincoln_O-77_matte_collodion_print.jpg/330px-Abraham_Lincoln_O-77_matte_collodion_print.jpg"></my-card>
+  <my-card title="Theodore Roosevelt" link="https://en.wikipedia.org/wiki/Theodore_Roosevelt" width = "250" length = "300" image = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Theodore_Roosevelt_by_the_Pach_Bros.jpg/401px-Theodore_Roosevelt_by_the_Pach_Bros.jpg"></my-card>
 
   <!-- this is going to take the tag and change the title -->
-  <polaris-chip title="Cool stuff"></polaris-chip>
-
-  <h1>my-card</h1>
-  <my-card></my-card>
 
   <!-- this is what is bringing in the definition for this tag -->
-  <script type="module" src="./src/polaris-chip.js"></script>
   <script type="module" src="./src/my-card.js"></script>
 </body>
 
