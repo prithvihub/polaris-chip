@@ -120,7 +120,7 @@ details summary {
     else {
       this.fancy = false;
     }
-  }
+  } 
 
   /**
    * render method is specific to LitElement based code. Anything you write here

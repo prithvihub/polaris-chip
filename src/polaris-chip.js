@@ -47,7 +47,7 @@ export class PolarisChip extends LitElement {
     */
       :host {
         /* Always make sure that your element has a default way of being displayed */
-        display: inline-flex;
+        display: inline-flex; 
       }
 
       span {
