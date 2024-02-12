@@ -28,8 +28,9 @@ export class MyCard extends LitElement {
   constructor() {
     super();
     // a variable on this object called title
-    this.title = 'pzs5683@PSU';
     this.link = '#';
+    this.fancy = false;
+    this.title = "Check it out!";
   }
 
   // CSS styles are scoped JUST to this element. This uses a technology called
@@ -47,8 +48,38 @@ export class MyCard extends LitElement {
     */
       :host {
         /* Always make sure that your element has a default way of being displayed */
-        display: inline-flex;
+        display: block;
+        border: 1px solid black;
+        margin: 20px;
+        padding: 20px;
       }
+      :host([fancy]) {
+        display: block;
+        background-color: pink;
+        border: 2px solid fuchsia;
+        box-shadow: 10px 5px 5px red;
+
+      img{
+        width: 100px;
+      }
+details summary {
+    text-align: left;
+    font-size: 20px;
+    padding: 8px 0;
+  }
+
+  details[open] summary {
+    font-weight: bold;
+  }
+  
+  details div {
+    border: 2px solid black;
+    text-align: left;
+    padding: 8px;
+    height: 70px;
+    overflow: auto;
+  }
+}
 
       span {
         background-color: orange;
@@ -62,7 +93,33 @@ export class MyCard extends LitElement {
         background-color: grey;
         border: 1px solid black;
       }
+      .card {
+        width: 300px;
+        max-height: 500px;
+        padding: 24px;
+        margin: 8px;
+        background-color: orange;
+        opacity: 0.8;
+        border-radius: 8px;
+      }
+      .pic {
+        width: 300px;
+        height: 200px;
+        border-radius: 15px;
+        object-fit: cover;
+      }
+
     `;
+  }
+
+  openChanged(e) {
+    console.log(e.newState);
+    if (e.newState === "open") {
+      this.fancy = true;
+    }
+    else {
+      this.fancy = false;
+    }
   }
 
   /**
@@ -84,15 +141,23 @@ export class MyCard extends LitElement {
     // it is going to print the title of the element. The magic of Lit is that
     // when title is changed (even by inspecting the document and hacking the value)
     // it will automatically update what is displayed and do so incredibly quickly
-    return html`<a href="${this.link}" rel="noopener nofollower"><img src="${this.image}" width="${this.width}" height="${this.length}" >
-    <br>
-    <span>${this.title}</span></a>
-    <br>
-    <p>
-      <button @click=${this.changetitle}>Change Title</button>
-      </p>
+    return html`
+          <div class="card">
+          <h3>${this.title}</h3>       
+          <img class = "pic" src = ${this.image} />
+
+          <div>
+          <details ?open="${this.fancy}" @toggle="${this.openChanged}">
+            <summary>Description</summary>
+            <div>
+              <slot>${this.description}</slot>
+            </div>
+          </details>
+          </div>
+        </div>
     `;
   }
+
 
   // LitElement uses the properties call to do the following:
   // - When a value changes it reacts to the change
@@ -103,30 +168,18 @@ export class MyCard extends LitElement {
     return {
       // this is a String. Array, Object, Number, Boolean are other valid values here
       title: { type: String },
-      link: {type: String },
-      image: {type: String },
+      image: {type: String},
+      description: {type: String },
+      link: {type: String, attribute: "link"},
+      text: {type: String, attribute: "text"},
       width: {type: String },
       length: {type: String },
-     };
-
+      fancy: {type: Boolean, reflect: true},
   }
-  changetitle() {
-    if (this.title == "George Washington")
-    {
-    this.title = '1st president';}
-    if (this.title == "Thomas Jefferson")
-    {
-    this.title = '3rd president';}
-    if (this.title == "Abraham Lincoln")
-    {
-    this.title = '16th president';}
-    if (this.title == "Theodore Roosevelt")
-    {
-    this.title = '26th president';}
 
-  }
 }
 
+}
 // All web components have a call to customElements.define(tag-name, className);
 // this code tells the browser that when you see this new HTML tag name
 // that you should run this class definition. This is the magic of standards
