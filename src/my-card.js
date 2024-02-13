@@ -120,7 +120,17 @@ details summary {
     else {
       this.fancy = false;
     }
-  } 
+  }
+
+  openChanged(e) {
+    console.log(e);
+    if (e.target.getAttribute('open') !== null) {
+      this.fancy = true;
+    }
+    else {
+      this.fancy = false;
+    }
+  }
 
   /**
    * render method is specific to LitElement based code. Anything you write here
