@@ -29,9 +29,7 @@ export class Counter extends LitElement{
   font-size : 80px; width : 100%;
   color: red;
   text-align: center;
-
 }
-
 
 .buttons {
 			display: flex;
@@ -55,18 +53,17 @@ export class Counter extends LitElement{
    color: red;     }  
    `  } 
 
-   
     render()
     {
         return html`
 		<div class="container">		 
             <confetti-container id="confetti">
         	<h2 id="counter">${this.counter}</h2>
-            </confetti-container>
 			<div class="buttons">
                 <button class="button" ?disabled="${this.counter === this.max}" @click=${this.onIncrementClick}>+</button>
                 <button class="button" ?disabled="${this.counter === this.min}" @click=${this.onDecrementClick}>-</button>
 			</div>
+      </confetti-container>
         </div>     
         `;
       
