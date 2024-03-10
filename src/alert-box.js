@@ -10,28 +10,27 @@ export class AlertBox extends LitElement {
     this.sticky = false;
     this.open = false;
     this.status = "";
-    this.message = "PSU Alert System";
-    this.date = "Everyday is a Sunday";
+    this.message = "Welcome!";
   }
   static get styles() {
     return css`
 :host {
     --displayC: none;
     --displayO: flex;
-    --bgcolor: #fcb900;
+    --bgcolor: #73716a;
     --txtcolor: white;
 }
 :host([status="notice"]) {
-    --bgcolor: blue;
-    --txtcolor: cyan;
+    --bgcolor: #0282fa;
+    --txtcolor: white;
 }
 :host([status = "warning"]) {
-    --bgcolor: yellow;
-    --txtcolor: red;
+    --bgcolor: #ff9a0c;
+    --txtcolor: white;
 }
 :host([status ="alert"]) {
-    --bgcolor: red;
-    --txtcolor: yellow;
+    --bgcolor: #ff0c0c;
+    --txtcolor: white;
 }
 :host([sticky]) {
     position: sticky;
@@ -66,26 +65,20 @@ export class AlertBox extends LitElement {
   padding: 100px;
   width: 100%;
   border: none;
-  text-align: center;
-  justify-content: center;
   outline: none;
   font-size: 30px;
   display: var(--displayC);
 }
 
 .alertDate {
-    font-size: 1.5rem;
-    width: 100%;
-    text-align: left;
-    float: left;
-    color: var(--txtcolor);        
+    float: none;
+    font-size: 1.2rem;
+    line-height: 3.rem;
+    color: var(--txtcolor);
 }
 .alertMessage {
-    padding: 100px 100px;
     font-size: 1.5rem;
     line-height: 3.rem;
-    font-style: italic;
-    width: 100%;
     color: var(--txtcolor);
 }
 .closeB {
@@ -108,7 +101,7 @@ export class AlertBox extends LitElement {
 
 <div class = "outerContainer">  
     <div>
-        <button  class="minBox"  @click="${this.openPanel}"> Campus Alerts
+        <button  class="minBox"  @click="${this.openPanel}"> Alert
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="10 10 82 82"
                 class="alert-icon"><g transform="translate(-350.099 -428.714)">
                 <g transform="translate(350.099 428.714)" fill="none" stroke-width="6">
@@ -129,15 +122,14 @@ export class AlertBox extends LitElement {
     </div>
 
     <div class="expandBox">
-        <span  class="alertDate"  > ${this.date}</span>
-        <br>
-        <br>
         <span  class="alertMessage" > 
-            <slot>
+        <slot>
                 ${this.message}
             </slot>
-            <br>   
         </span>
+        <br>
+        <br>
+        <span  class="alertDate"  ><slot>${this.date}</slot></span>
         <button class="closeB" @click="${this.closePanel}"> x CLOSE</button>
     </div>
 </div>  
@@ -148,12 +140,22 @@ closePanel() {
     this.style.setProperty('--displayC', 'none');
     this.style.setProperty('--displayO', 'flex');    
     this.shadowRoot.querySelector('.minBox').focus();
+    localStorage.setItem("opencloseFlag", "close");
 }
 
 openPanel() {
     this.style.setProperty('--displayC', 'unset');
     this.style.setProperty('--displayO', 'none');  
-    this.shadowRoot.querySelector('.closeB').focus()
+    this.shadowRoot.querySelector('.closeB').focus();
+    localStorage.setItem("opencloseFlag", "open");
+}
+
+firstUpdated() {
+    if (localStorage.getItem("opencloseFlag") == "open") {
+      this.openPanel(); }
+    else if (localStorage.getItem("opencloseFlag") == "close") {
+      this.closePanel();  
+    }
 }
 
 static get properties() {
