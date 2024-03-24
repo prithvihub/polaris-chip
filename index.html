@@ -87,7 +87,9 @@ p {
   <title>polaris-chip / my-card</title>
 </head>
 
+
 <body> 
+  <haxcms-party-ui seed="john"></haxcms-party-ui>
   <h1>alert-box</h1>
   <alert-box></alert-box>
   <alert-box sticky status="notice" message="Small notice: watch out for this today." date="August 12, 2023"></alert-box>
@@ -120,6 +122,7 @@ p {
 </my-card>
 </div>
   <!-- this is what is bringing in the definition for this tag -->
+  <script type="module" src="./src/haxcms-party.js"></script>
   <script type="module" src="./src/polaris-chip.js"></script>
   <script type="module" src="./src/my-card.js"></script>
   <script type="module" src="./src/counter-app.js"></script>
