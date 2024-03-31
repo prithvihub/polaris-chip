@@ -35,6 +35,7 @@ export class HaxCmsParty extends DDD {
         name  {
            padding: 10px;
         }
+
         .user {
             margin: 10px;
             display: inline-flex;
@@ -45,6 +46,9 @@ export class HaxCmsParty extends DDD {
             border-color: var(--ddd-theme-default-potentialMidnight);
             padding: 12px 20px;
           }
+        .user-char {
+                    margin: auto;
+                }
         remove-item  {
          background-color: red;
          color: white;
@@ -126,7 +130,7 @@ export class HaxCmsParty extends DDD {
        <confetti-container id="confetti">
           ${this.items.map((item) => html`
           <div class = "user  ${item.seed}">
-          <rpg-character seed="${item.seed}" hat="random"></rpg-character>
+          <rpg-character class="userchar" seed="${item.seed}" hat="random"></rpg-character>
           <name>${item.seed}</name>
           <remove-item  @click="${this.targetClicked}" data-id="${item.id}"> Remove user</remove-item>
           </div>
