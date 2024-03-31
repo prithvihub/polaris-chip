@@ -1,7 +1,10 @@
 
 import { LitElement, html, css } from 'lit';
+
+//rpg-character web component import */
 import "@lrnwebcomponents/rpg-character/rpg-character.js";
-/*import  "../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js"; */
+
+//ddd(design,develop,destroy) web component */
 import { DDD } from '../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js';
 
 export class HaxCmsParty extends DDD {
@@ -22,21 +25,22 @@ export class HaxCmsParty extends DDD {
            padding: var(--ddd-spacing-5);
            width: 25%;      
            box-sizing: border-box;
-           align-content: center;
         }
         button {
-           width: 15%;
-           padding: 12px 20px;
+           width: 10%;
+           padding: var(--ddd-spacing-2, 12px 20px);
            margin: 8px 0;
            box-sizing: border-box;
            background-color: yellow;
            border-radius: 12px;
         }
         name  {
-           padding: 10px;
+          padding: var(--ddd-spacing-3);
+           color : var(--ddd-theme-default-beaverBlue);
         }
 
         .user {
+  
             margin: 10px;
             display: inline-flex;
             flex-wrap: wrap;
@@ -50,12 +54,12 @@ export class HaxCmsParty extends DDD {
            margin: auto;
          }
         remove-item  {
-         background-color: red; 
-         color: white;
+         background-color: red;
+         color: var(--ddd-theme-default-white); 
          padding: 12px 20px;
          margin: 8px 0;
          border-radius: 12px;
-         width: 50%;
+         width:40%;
         }
         remove-item:hover, button:hover {
                     background-color: var(--ddd-theme-default-potentialMidnight);
@@ -77,23 +81,28 @@ export class HaxCmsParty extends DDD {
       return this.renderRoot?.querySelector('#newitem') ?? null;
     }
 
+    // to add a new user to the party */
     addItem(e) {
+      // random number acts as the id/key */
       const randomNumber = globalThis.crypto.getRandomValues(new Uint32Array(1))[0];  
       const item = {
         id: randomNumber,
         }
+      
+      // add the user to the array */
       item.seed = this.input.value;
       if (this.input.value != "" ) {
         this.items = [...this.items,  item];
       }
+
+      // reset screen, output to console */ 
       this.input.value = "";
       console.log(this.items);
-      this.printitems = this.items;
-      let string = JSON.stringify(this.items);    
-      localStorage.setItem("userlist", string);
       this.requestUpdate();
+
     }
-  
+    
+    // this method to identify the user that is removed */
     targetClicked(e) {
 
       // another way of finding the index that matches what was clicked if you have a unique value in your items as added
@@ -105,14 +114,11 @@ export class HaxCmsParty extends DDD {
       if (index > -1) {
          const previousSecondElementOfTheArray = this.items.splice(index, 1);
        }
-       this.printitems = this.items;
-       let string = JSON.stringify(this.items);    
-       localStorage.setItem("userlist", string);
        this.requestUpdate();
     }
     
+    // get information from localstorage, if available */
     firstUpdated() {
-
       let retString = localStorage.getItem("userlist");
       this.printitems = JSON.parse(retString);
       if (this.printitems === undefined || this.printitems.length == 0) {
@@ -120,8 +126,6 @@ export class HaxCmsParty extends DDD {
       else {
         this.items = this.printitems;
       };
-
-
     }
 
     render() {
@@ -134,7 +138,7 @@ export class HaxCmsParty extends DDD {
           <div class = "user  ${item.seed}">
           <rpg-character class="userchar" seed="${item.seed}" hat="random"></rpg-character>
           <name>${item.seed}</name>
-          <remove-item  @click="${this.targetClicked}" data-id="${item.id}"> Remove user</remove-item>
+          <remove-item  @click="${this.targetClicked}" data-id="${item.id}"> Remove User</remove-item>
           </div>
          `)}
         </div>
@@ -145,9 +149,15 @@ export class HaxCmsParty extends DDD {
       `;
     }
 
+    /* when saved, throw an alert and */
     saveAll = () => {
       this.makeItRain(); 
       alert("Successfully saved the party!");
+      /* once user removed, place the new array into local storage and refresh screen */
+      this.printitems = this.items;
+      let string = JSON.stringify(this.items);    
+      localStorage.setItem("userlist", string);
+      this.requestUpdate();
     }    
 
     makeItRain() {
