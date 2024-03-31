@@ -1,6 +1,6 @@
 
 import { LitElement, html, css } from 'lit';
-import "../node_modules/@lrnwebcomponents/rpg-character/rpg-character.js";
+import "@lrnwebcomponents/rpg-character/rpg-character.js";
 import  "../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js";
 import { DDD } from '../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js';
 
