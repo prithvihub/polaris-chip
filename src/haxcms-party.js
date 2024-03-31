@@ -2,8 +2,9 @@
 import { LitElement, html, css } from 'lit';
 import "../node_modules/@lrnwebcomponents/rpg-character/rpg-character.js";
 import  "../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js";
+import { DDD } from '../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js';
 
-export class HaxCmsParty extends LitElement {
+export class HaxCmsParty extends DDD {
 
     static get tag()
     {
@@ -15,13 +16,13 @@ export class HaxCmsParty extends LitElement {
       return css`
         :host {
           display: block
-
         }
         input[type=text] {
-           width: 25%;
-           padding: 12px 20px;
-           margin: 8px 0;
+           margin: var(--ddd-spacing-4);
+           padding: var(--ddd-spacing-5);
+           width: 25%;      
            box-sizing: border-box;
+           align-content: center;
         }
         button {
            width: 15%;
@@ -31,38 +32,60 @@ export class HaxCmsParty extends LitElement {
            background-color: yellow;
            border-radius: 12px;
         }
-        my-item  {
-         background-color: orange;
-         padding: 16px;
-         border-radius: 12px;
+        name  {
+           padding: 10px;
         }
+        .user {
+            margin: 10px;
+            display: inline-flex;
+            flex-wrap: wrap;
+            text-align: center;
+            border: var(--ddd-border-md);
+            border-radius: 5px;
+            border-color: var(--ddd-theme-default-potentialMidnight);
+            padding: 12px 20px;
+          }
+        remove-item  {
+         background-color: red;
+         color: white;
+         padding: 12px 20px;
+         margin: 8px 0;
+         border-radius: 12px;
+         width: 50%;
+        }
+        remove-item:hover, button:hover {
+                    background-color: var(--ddd-theme-default-potentialMidnight);
+                    color: var(--ddd-theme-default-limestoneLight);
+                }
       `; 
     }
     
 
     constructor() {
-      super();
-      
+      super();      
       // MUST have array initialized as empty or it'll break in console
       this.items = [];
     }
+
     get input() {
       return this.renderRoot?.querySelector('#newitem') ?? null;
     }
+
     addItem(e) {
-      const randomNumber = globalThis.crypto.getRandomValues(new Uint32Array(1))[0];
-  
+      const randomNumber = globalThis.crypto.getRandomValues(new Uint32Array(1))[0];  
       const item = {
         id: randomNumber,
-        title: "Test User",
         }
-
       item.seed = this.input.value;
       if (this.input.value != "" ) {
         this.items = [...this.items,  item];
       }
       this.input.value = "";
       console.log(this.items);
+      this.printitems = this.items;
+      let string = JSON.stringify(this.items);    
+      localStorage.setItem("userlist", string);
+      this.requestUpdate();
     }
   
     targetClicked(e) {
@@ -70,31 +93,48 @@ export class HaxCmsParty extends LitElement {
       // another way of finding the index that matches what was clicked if you have a unique value in your items as added
       // which... seed / name of the user should be enforced to be unique so.....
       const index = this.items.findIndex((item) => {
-        return item.id === parseInt(e.target.closest('my-item').getAttribute('data-id'));
+        return item.id === parseInt(e.target.closest('remove-item').getAttribute('data-id'));
       });
       console.log(index);
       if (index > -1) {
          const previousSecondElementOfTheArray = this.items.splice(index, 1);
        }
+       this.printitems = this.items;
+       let string = JSON.stringify(this.items);    
+       localStorage.setItem("userlist", string);
+       this.requestUpdate();
+    }
+    
+    firstUpdated() {
 
-      this.requestUpdate();
+      let retString = localStorage.getItem("userlist");
+      this.printitems = JSON.parse(retString);
+      if (this.printitems === undefined || this.printitems.length == 0) {
+      }
+      else {
+        this.items = this.printitems;
+      };
+
+
     }
 
     render() {
       return html`
-        <input type="text" id="newitem" value=${this.seed} onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))">
-        <button @click="${this.addItem}">Add member</button>
+        <input type="text" id="newitem" value=${this.seed} onkeypress="return ( (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))" maxlength="8">
+        <button @click="${this.addItem}">Add User</button>
         </br>       
        <confetti-container id="confetti">
-       <div>
           ${this.items.map((item) => html`
-            
+          <div class = "user  ${item.seed}">
           <rpg-character seed="${item.seed}" hat="random"></rpg-character>
-          <my-item title="${item.title}" @click="${this.targetClicked}" data-id="${item.id}">${item.seed}</my-item>
+          <name>${item.seed}</name>
+          <remove-item  @click="${this.targetClicked}" data-id="${item.id}"> Remove user</remove-item>
+          </div>
          `)}
         </div>
         </confetti-container>
         <br>
+
         <button  @click="${this.saveAll}">Save all</button>
       `;
     }
@@ -129,6 +169,7 @@ export class HaxCmsParty extends LitElement {
       return {
         seed: { type: String, reflect: true },
         items: {type: Array},
+        printitems: {type: Array}
       };
     }  
 
