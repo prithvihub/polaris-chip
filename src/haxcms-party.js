@@ -1,7 +1,7 @@
 
 import { LitElement, html, css } from 'lit';
 import "@lrnwebcomponents/rpg-character/rpg-character.js";
-import  "../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js";
+/*import  "../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js"; */
 import { DDD } from '../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js';
 
 export class HaxCmsParty extends DDD {
