@@ -3,7 +3,7 @@ import { LitElement, html, css } from 'lit';
 import "@lrnwebcomponents/rpg-character/rpg-character.js";
 /*import  "../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js"; */
 import { DDD } from '../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js';
-import copy from 'rollup-plugin-copy';
+
 export class HaxCmsParty extends DDD {
 
     static get tag()
