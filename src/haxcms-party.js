@@ -3,7 +3,7 @@ import { LitElement, html, css } from 'lit';
 import "@lrnwebcomponents/rpg-character/rpg-character.js";
 /*import  "../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js"; */
 import { DDD } from '../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js';
-
+import copy from 'rollup-plugin-copy';
 export class HaxCmsParty extends DDD {
 
     static get tag()
@@ -47,10 +47,10 @@ export class HaxCmsParty extends DDD {
             padding: 12px 20px;
           }
         .user-char {
-                    margin: auto;
-                }
+           margin: auto;
+         }
         remove-item  {
-         background-color: red;
+         background-color: red; 
          color: white;
          padding: 12px 20px;
          margin: 8px 0;
@@ -60,6 +60,8 @@ export class HaxCmsParty extends DDD {
         remove-item:hover, button:hover {
                     background-color: var(--ddd-theme-default-potentialMidnight);
                     color: var(--ddd-theme-default-limestoneLight);
+                    transform: scale(1.1);
+                    transition: 0.3s ease-in-out;
                 }
       `; 
     }
