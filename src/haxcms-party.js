@@ -64,7 +64,7 @@ export class HaxCmsParty extends DDD {
         remove-item:hover, button:hover {
                     background-color: var(--ddd-theme-default-potentialMidnight);
                     color: var(--ddd-theme-default-limestoneLight);
-                    transform: scale(1.1);
+                    transform: scale(1.05);
                     transition: 0.3s ease-in-out;
                 }
       `; 
@@ -97,7 +97,12 @@ export class HaxCmsParty extends DDD {
 
       // reset screen, output to console */ 
       this.input.value = "";
+      this.input.focus();
       console.log(this.items);
+      /* once user added, place the new array into local storage and refresh screen */
+      this.printitems = this.items;
+      let string = JSON.stringify(this.items);    
+      localStorage.setItem("userlist", string);
       this.requestUpdate();
 
     }
@@ -114,6 +119,11 @@ export class HaxCmsParty extends DDD {
       if (index > -1) {
          const previousSecondElementOfTheArray = this.items.splice(index, 1);
        }
+       this.input.focus();
+      /* once user removed, place the new array into local storage and refresh screen */
+      this.printitems = this.items;
+      let string = JSON.stringify(this.items);    
+      localStorage.setItem("userlist", string);
        this.requestUpdate();
     }
     
@@ -130,9 +140,10 @@ export class HaxCmsParty extends DDD {
 
     render() {
       return html`
-        <input type="text" id="newitem" value=${this.seed} onkeypress="return ( (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))" maxlength="8">
+        <input type="text" id="newitem" placeholder="Enter Username" value=${this.seed} onkeypress="return ( (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))" maxlength="8">
         <button @click="${this.addItem}">Add User</button>
-        </br>       
+        <button  @click="${this.saveAll}">Save all</button>
+      </br>       
        <confetti-container id="confetti">
           ${this.items.map((item) => html`
           <div class = "user  ${item.seed}">
@@ -145,7 +156,7 @@ export class HaxCmsParty extends DDD {
         </confetti-container>
         <br>
 
-        <button  @click="${this.saveAll}">Save all</button>
+        
       `;
     }
 
@@ -153,7 +164,7 @@ export class HaxCmsParty extends DDD {
     saveAll = () => {
       this.makeItRain(); 
       alert("Successfully saved the party!");
-      /* once user removed, place the new array into local storage and refresh screen */
+      /* place the array into local storage and refresh screen */
       this.printitems = this.items;
       let string = JSON.stringify(this.items);    
       localStorage.setItem("userlist", string);
