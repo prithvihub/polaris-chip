@@ -163,7 +163,25 @@ export class HaxCmsParty extends DDD {
     /* when saved, throw an alert and */
     saveAll = () => {
       this.makeItRain(); 
-      alert("Successfully saved the party!");
+      const str1 = 'Successfully saved the party! Members :';
+      let len = this.items?.length;
+      var newString = '';
+
+      if (len > 0) {
+
+          for (var i = 0; i < len; i++) {
+              if (i + 1 == len) {
+                  newString = newString.concat(`${this.items[i].seed}`)
+              } else {
+                  newString = newString.concat(`${this.items[i].seed} , `)
+              }
+          }
+      }
+      else {
+        newString = 'None';
+      }
+      
+      alert(str1.concat(newString));
       /* place the array into local storage and refresh screen */
       this.printitems = this.items;
       let string = JSON.stringify(this.items);    
