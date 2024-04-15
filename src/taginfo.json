@@ -1,0 +1,34 @@
+{
+"questionSet": {
+    "good form": {
+        "correct": true,
+        "feedback": "The shape of the vase clearly demonstrates craftsmanship."
+    },
+    "poor taste": {
+        "correct": false,
+        "feedback": "Taste is in the eye of the designer as well as the viewer."
+    },
+    "contrasting themes ": {
+        "correct": false,
+        "feedback": "There is uniformity in the shape, but there is no depth to this media to imply that it is contrasting with other figures."
+    },
+    "AI": {
+        "correct": true,
+        "feedback": "While a modification of prior work, this is still AI generative work."
+    },
+    "shading ": {
+        "correct": false,
+        "feedback": "while there is a light source and a shadow cast, shading is a term used for pencil based sketching."
+    },
+    "original work": {
+        "correct": true,
+        "feedback": "this character is not based on any person, place, or existing trope."
+    },
+    "accessible": {
+        "correct": false,
+        "feedback": "the color scheme while high contrast in some areas, loses form in others and has written text unrelated to the character."
+    }
+
+  }
+
+}

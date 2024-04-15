@@ -38,7 +38,6 @@ export class HaxCmsParty extends DDD {
           padding: var(--ddd-spacing-3);
            color : var(--ddd-theme-default-beaverBlue);
         }
-
         .user {
   
             margin: 10px;
@@ -70,7 +69,6 @@ export class HaxCmsParty extends DDD {
       `; 
     }
     
-
     constructor() {
       super();      
       // MUST have array initialized as empty or it'll break in console
@@ -104,7 +102,6 @@ export class HaxCmsParty extends DDD {
       let string = JSON.stringify(this.items);    
       localStorage.setItem("userlist", string);
       this.requestUpdate();
-
     }
     
     // this method to identify the user that is removed */
@@ -124,7 +121,7 @@ export class HaxCmsParty extends DDD {
       this.printitems = this.items;
       let string = JSON.stringify(this.items);    
       localStorage.setItem("userlist", string);
-       this.requestUpdate();
+      this.requestUpdate();
     }
     
     // get information from localstorage, if available */
@@ -140,35 +137,32 @@ export class HaxCmsParty extends DDD {
 
     render() {
       return html`
-        <input type="text" id="newitem" placeholder="Enter Username" value=${this.seed} onkeypress="return ( (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))" maxlength="8">
-        <button @click="${this.addItem}">Add User</button>
+        <input type="text" id="newitem" placeholder="Enter username" value=${this.seed} onkeypress="return ( (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))" maxlength="8">
+        <button @click="${this.addItem}">Add user</button>
         <button  @click="${this.saveAll}">Save all</button>
-      </br>       
+      </br>
        <confetti-container id="confetti">
           ${this.items.map((item) => html`
           <div class = "user  ${item.seed}">
           <rpg-character class="userchar" seed="${item.seed}" hat="random"></rpg-character>
           <name>${item.seed}</name>
-          <remove-item  @click="${this.targetClicked}" data-id="${item.id}"> Remove User</remove-item>
+          <remove-item  @click="${this.targetClicked}" data-id="${item.id}"> Remove user</remove-item>
           </div>
          `)}
         </div>
         </confetti-container>
-        <br>
-
-        
+        <br>        
       `;
     }
 
     /* when saved, throw an alert and */
     saveAll = () => {
       this.makeItRain(); 
-      const str1 = 'Successfully saved the party! Members :';
+      const str1 = 'Successfully saved the party! Members: ';
       let len = this.items?.length;
       var newString = '';
 
       if (len > 0) {
-
           for (var i = 0; i < len; i++) {
               if (i + 1 == len) {
                   newString = newString.concat(`${this.items[i].seed}`)
