@@ -34,10 +34,10 @@ export class TaggingQuestion extends DDD {
         display: inline-block;
         margin: 12px 16px;
         border-radius: 100px;
-        color: red;
+        color: white;
         box-sizing: border-box;
         padding: 12px 24px;
-        background-color: yellow;
+        background-color: blue;
       }
 
 
@@ -54,7 +54,6 @@ export class TaggingQuestion extends DDD {
 
     fetchjson() {
       const buttonset = [];       
-  /*    fetch('src/taginfo.json') */
       fetch('src/taginfo.json')
         .then(response => response.json())
         .then((json) =>
@@ -81,10 +80,6 @@ export class TaggingQuestion extends DDD {
 
              });                       
        } )
-
-
-
-
     }
 
     
@@ -115,18 +110,14 @@ export class TaggingQuestion extends DDD {
           </div>
           
           <div id="results"> </div>
-       
-          
-
-          </confetti-container>
+        </confetti-container>
 
       `;
     }
 
 
     solutionClicked(event) {
-      this.clickedItem = event.target;
-        const solutionTags = this.shadowRoot.getElementById('solutionTags');
+        this.clickedItem = event.target;
         const optionTags = this.shadowRoot.getElementById('optionTags');
   
         if(this.clickedItem.classList.contains('tags')) {
@@ -136,10 +127,8 @@ export class TaggingQuestion extends DDD {
       
     }
     optionClicked(event) {
-      this.clickedItem = event.target;
-      
+        this.clickedItem = event.target;
         const solutionTags = this.shadowRoot.getElementById('solutionTags');
-  
         if(this.clickedItem.classList.contains('tags')) {
           this.clickedItem.remove();
           solutionTags.append(this.clickedItem);
@@ -156,6 +145,7 @@ export class TaggingQuestion extends DDD {
           if (tag.dataset.correct == 'true'){ isCorrect = true ; }
           if(isCorrect){
              tag.style.color = "green";
+             tag.title = tag.dataset.feedback;
              this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:green">${tag.textContent} - ${tag.dataset.feedback}</p>`;
             }
           else {
@@ -172,9 +162,6 @@ export class TaggingQuestion extends DDD {
          if (tag.dataset.correct == 'true'){ isCorrect = true ; }
          if(isCorrect){
            var allCorrect = false;   
-           tag.style.color = "red";        
-           tag.title = tag.dataset.feedback;
-           this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:red">${tag.textContent} -${tag.dataset.feedback}</p>`;
          }
        }
        const checkBtn = this.shadowRoot.querySelectorAll('.checkBtn');
@@ -190,9 +177,6 @@ export class TaggingQuestion extends DDD {
       checkBtn.forEach(btn => {
           btn.disabled = false;
       });
-
-
-
       const optionTags = this.shadowRoot.querySelectorAll('#optionTags .tags');
       for (const tag of optionTags) {
         tag.remove();
