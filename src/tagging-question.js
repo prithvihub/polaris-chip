@@ -53,8 +53,9 @@ export class TaggingQuestion extends DDD {
       }
 
     fetchjson() {
+      
       const buttonset = [];       
-      fetch('aea5c247.json')
+      fetch('src/taginfo.json')
         .then(response => response.json())
         .then((json) =>
               {   const questionSet  = json.questionSet;   
@@ -79,7 +80,7 @@ export class TaggingQuestion extends DDD {
 
 
              });                       
-       } )
+       } ) 
     }
 
     
@@ -171,6 +172,8 @@ export class TaggingQuestion extends DDD {
         this.makeItRain();
        }
     }
+
+    
     reset() {
       this.shadowRoot.querySelector('#results').innerHTML = ``;
       const checkBtn = this.shadowRoot.querySelectorAll('.checkBtn');
