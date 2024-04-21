@@ -54,7 +54,7 @@ export class TaggingQuestion extends DDD {
 
     fetchjson() {
       const buttonset = [];       
-      fetch('https://polaris-chip-ecru.vercel.app/f6f9df48.json')
+      fetch('src/taginfo.json')
         .then(response => response.json())
         .then((json) =>
               {   const questionSet  = json.questionSet;   
