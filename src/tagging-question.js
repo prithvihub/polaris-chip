@@ -21,67 +21,188 @@ export class TaggingQuestion extends DDD {
             max-width: 100%;
             padding: 8px;
         }
-        .boxB {
+        .tags {
         display: inline-block;
-        margin: 4px 16px;
-        border-radius: 100px;
-        color: green;
+        margin: 8px 16px;
+        border-radius: 50px;
+        color: black;
         box-sizing: border-box;
-        padding: 4px 12px;
+        padding: 8px 24px;
+        background-color: orange;
       }
+       .checkBtn, .resetBtn {
+        display: inline-block;
+        margin: 12px 16px;
+        border-radius: 100px;
+        color: red;
+        box-sizing: border-box;
+        padding: 12px 24px;
+        background-color: yellow;
+      }
+
 
         `; 
 
     }
     constructor() {
-        super();
-      
-        fetch('src/taginfo.json')
-          .then(response => response.json())
-          .then((json) =>
-                {   const questionSet  = json.questionSet;   
-                    const optionTags = this.shadowRoot.getElementById('optionTags');  
-                    const buttons = [];                
-                     for (const index in questionSet) {
-                          const question = questionSet[index];
-                          const button = document.createElement('button');
-                          button.classList.add('boxB');
-                          button.textContent = index;
-                          button.dataset.correct = question.correct;
-                          button.dataset.feedback = question.feedback;
-                          buttons.push(button);
-                       }
-                    buttons.forEach(button => {
-                    optionTags.appendChild(button);
+      super();
+
+      this.fetchjson();
+      this.question = "Which of the following big ideas would YOU associate with this artistic work?";
+      this.image = "https://oer.hax.psu.edu/bto108/sites/haxcellence/files/HAX.psu%20World%20changer-circle1.png";
+      }
+
+    fetchjson() {
+      const buttonset = [];       
+  /*    fetch('src/taginfo.json') */
+      fetch('src/taginfo.json')
+        .then(response => response.json())
+        .then((json) =>
+              {   const questionSet  = json.questionSet;   
+                  const optionTags = this.shadowRoot.getElementById('optionTags');  
+                           
+                   for (const index in questionSet) {
+                        const question = questionSet[index];
+                        const button = document.createElement('button');
+                        button.classList.add('tags');
+                        button.textContent = index;
+                        button.dataset.correct = question.correct;
+                        button.dataset.feedback = question.feedback;
+                        buttonset.push(button);
+                     }
+                    for (let i = buttonset.length - 1; i > 0; i--) { 
+                      const j = Math.floor(Math.random() * (i + 1)); 
+                      [buttonset[i], buttonset[j]] = [buttonset[j], buttonset[i]]; 
+                    } 
+                      
+                  buttonset.forEach(button => {
+                      optionTags.appendChild(button);
+
+
              });                       
-                } )
+       } )
 
 
-        }
 
 
+    }
 
     
 
     render() {
         return html`
-
-          <div id="question">${this.question}</div>
-          <img id="image" src=${this.image}>
-
-          <div id="optionTags"></div>
-
+            <div id="question">
+              <slot>${this.question}</slot>
+            </div>
+          
+          <div id="Instruction">Click a chip to move from options to your choice. To undo, click on the chip to move it back to options area</div>     
           <div id="actions">
-
-              <button  @click=${this.check}>
+             <button id = "checkBtn" class="checkBtn" @click=${this.check}>
                   CHECK
               </button>
-              <button  @click=${this.reset}>
+              <button id = "resetBtn" class="resetBtn" @click=${this.reset}>
                   RESET
               </button>
+          </div>      
+          <confetti-container id="confetti">
+          <img id="image" src=${this.image}>
+          <div id="optionsTagsArea">Options</div>
+          <div id="optionTags" @click=${this.optionClicked} >
           </div>
+              
+          <div id="solutionTags" @click=${this.solutionClicked}>
+              <div id="solutionTagsArea">Your Choice</div>
+          </div>
+          
+          <div id="results"> </div>
+       
+          
+
+          </confetti-container>
 
       `;
+    }
+
+
+    solutionClicked(event) {
+      this.clickedItem = event.target;
+        const solutionTags = this.shadowRoot.getElementById('solutionTags');
+        const optionTags = this.shadowRoot.getElementById('optionTags');
+  
+        if(this.clickedItem.classList.contains('tags')) {
+          this.clickedItem.remove();
+          optionTags.append(this.clickedItem);
+        }
+      
+    }
+    optionClicked(event) {
+      this.clickedItem = event.target;
+      
+        const solutionTags = this.shadowRoot.getElementById('solutionTags');
+  
+        if(this.clickedItem.classList.contains('tags')) {
+          this.clickedItem.remove();
+          solutionTags.append(this.clickedItem);
+        }
+      
+    }
+
+    check() {
+      this.shadowRoot.querySelector('#results').innerHTML += `<p>Results : </p>`;
+      var allCorrect = true;
+       const solutionTags = this.shadowRoot.querySelectorAll('#solutionTags .tags');
+       for (const tag of solutionTags) {
+          var isCorrect = false;
+          if (tag.dataset.correct == 'true'){ isCorrect = true ; }
+          if(isCorrect){
+             tag.style.color = "green";
+             this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:green">${tag.textContent} - ${tag.dataset.feedback}</p>`;
+            }
+          else {
+             var allCorrect = false;
+             tag.style.color = "red";
+             tag.title = tag.dataset.feedback;
+             this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:red">${tag.textContent} - ${tag.dataset.feedback}</p>`;
+          }
+        }
+
+       const optionTags = this.shadowRoot.querySelectorAll('#optionTags .tags');
+       for (const tag of optionTags) {
+         var isCorrect = false;
+         if (tag.dataset.correct == 'true'){ isCorrect = true ; }
+         if(isCorrect){
+           var allCorrect = false;   
+           tag.style.color = "red";        
+           tag.title = tag.dataset.feedback;
+           this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:red">${tag.textContent} -${tag.dataset.feedback}</p>`;
+         }
+       }
+       const checkBtn = this.shadowRoot.querySelectorAll('.checkBtn');
+       checkBtn.forEach(btn => {
+               btn.disabled = true; });
+       if ( allCorrect == true ) {
+        this.makeItRain();
+       }
+    }
+    reset() {
+      this.shadowRoot.querySelector('#results').innerHTML = ``;
+      const checkBtn = this.shadowRoot.querySelectorAll('.checkBtn');
+      checkBtn.forEach(btn => {
+          btn.disabled = false;
+      });
+
+
+
+      const optionTags = this.shadowRoot.querySelectorAll('#optionTags .tags');
+      for (const tag of optionTags) {
+        tag.remove();
+      }    
+      const solutionTags = this.shadowRoot.querySelectorAll('#solutionTags .tags');
+      for (const tag of solutionTags) {
+        tag.remove();
+      }            
+      this.fetchjson();
+
     }
 
     makeItRain() {
