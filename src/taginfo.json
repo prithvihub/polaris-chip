@@ -1,5 +1,4 @@
-{
-"questionSet":{
+{ "questionSet": {
     "good form": {
         "correct": true,
         "feedback": "The shape of the vase clearly demonstrates craftsmanship."
@@ -18,17 +17,15 @@
     },
     "shading ": {
         "correct": false,
-        "feedback": "while there is a light source and a shadow cast, shading is a term used for pencil based sketching."
+        "feedback": "While there is a light source and a shadow cast, shading is a term used for pencil based sketching."
     },
     "original work": {
         "correct": true,
-        "feedback": "this character is not based on any person, place, or existing trope."
+        "feedback": "This character is not based on any person, place, or existing trope."
     },
     "accessible": {
         "correct": false,
-        "feedback": "the color scheme while high contrast in some areas, loses form in others and has written text unrelated to the character."
+        "feedback": "The color scheme while high contrast in some areas, loses form in others and has written text unrelated to the character."
     }
-
   }
-
 }

@@ -91,7 +91,7 @@ export class TaggingQuestion extends DDD {
               <slot>${this.question}</slot>
             </div>
           
-          <div id="Instruction">Click a chip to move from options to your choice. To undo, click on the chip to move it back to options area</div>     
+          <div id="Instruction">Click on the chip to move from options to your choice. To undo, click on the chip in the choice area</div>     
           <div id="actions">
              <button id = "checkBtn" class="checkBtn" @click=${this.check}>
                   CHECK
@@ -138,20 +138,23 @@ export class TaggingQuestion extends DDD {
     }
 
     check() {
-      this.shadowRoot.querySelector('#results').innerHTML += `<p>Results : </p>`;
+
       var allCorrect = true;
        const solutionTags = this.shadowRoot.querySelectorAll('#solutionTags .tags');
+       if ( solutionTags.length == 0 ) {alert ("choose at least one option! "); return;} ;
+
+       this.shadowRoot.querySelector('#results').innerHTML += `<p>Results : </p>`;
        for (const tag of solutionTags) {
           var isCorrect = false;
           if (tag.dataset.correct == 'true'){ isCorrect = true ; }
           if(isCorrect){
-             tag.style.color = "green";
+             tag.style.background = "green";
              tag.title = tag.dataset.feedback;
              this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:green">${tag.textContent} - ${tag.dataset.feedback}</p>`;
             }
           else {
              var allCorrect = false;
-             tag.style.color = "red";
+             tag.style.background = "red";
              tag.title = tag.dataset.feedback;
              this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:red">${tag.textContent} - ${tag.dataset.feedback}</p>`;
           }
@@ -162,23 +165,23 @@ export class TaggingQuestion extends DDD {
          var isCorrect = false;
          if (tag.dataset.correct == 'true'){ isCorrect = true ; }
          if(isCorrect){
-           var allCorrect = false;   
+           var allCorrect = false;
          }
        }
        const checkBtn = this.shadowRoot.querySelectorAll('.checkBtn');
        checkBtn.forEach(btn => {
-               btn.disabled = true; });
+        btn.style.visibility =  "hidden"; });
        if ( allCorrect == true ) {
         this.makeItRain();
        }
     }
 
-    
+
     reset() {
       this.shadowRoot.querySelector('#results').innerHTML = ``;
       const checkBtn = this.shadowRoot.querySelectorAll('.checkBtn');
       checkBtn.forEach(btn => {
-          btn.disabled = false;
+          btn.style.visibility = "visible";
       });
       const optionTags = this.shadowRoot.querySelectorAll('#optionTags .tags');
       for (const tag of optionTags) {
