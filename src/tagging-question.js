@@ -55,7 +55,7 @@ export class TaggingQuestion extends DDD {
     fetchjson() {
       
       const buttonset = [];
-      const source = new URL('taginfo.json', import.meta.url).href;
+      const source = new URL('../src/taginfo.json', import.meta.url).href;
       fetch(source)
         .then(response => response.json())
         .then((json) =>
