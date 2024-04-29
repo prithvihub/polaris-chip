@@ -12,51 +12,67 @@ export class TaggingQuestion extends DDD {
     {
         return css`
         :host {
-          display: block
+            display: block;
         }
         
         img {
+            border-color: var(--ddd-theme-default-potentialMidnight);
+            box-sizing: border-box;
+            display: inline-block;
+            border: solid;
+            color: pink;                       
             max-height: 300px;
             object-fit: contain;
             max-width: 100%;
             padding: 8px;
+            margin-left: 20%;
+            margin-right: auto;
         }
         .tags {
-        display: inline-block;
-        margin: 8px 16px;
-        border-radius: 50px;
-        color: black;
-        box-sizing: border-box;
-        padding: 8px 24px;
-        background-color: orange;
-      }
+            display: inline-block;
+            margin: 8px 16px;
+            border-radius: 50px;
+            color: var(--ddd-theme-default-black);
+            box-sizing: border-box;
+            padding: 8px 24px;
+            background-color: orange;
+        }
        .checkBtn, .resetBtn {
-        display: inline-block;
-        margin: 12px 16px;
-        border-radius: 100px;
-        color: white;
-        box-sizing: border-box;
-        padding: 12px 24px;
-        background-color: blue;
-      }
+            display: inline-block;
+            margin: 12px 16px;
+            border-radius: 100px;
+            color: white;
+            box-sizing: border-box;
+            padding: 12px 24px;
+            background-color: blue;
+        }
 
-
-        `; 
-
-    }
+       #optionTags , #solutionTags {
+            box-sizing: border-box;
+            display: inline-block;
+            border: solid;
+            color: purple;
+            justify-content: center;   
+        }       
+       `; }
     constructor() {
       super();
-
-      this.fetchjson();
+      this.question = 'Default Question';
+      this.imageURL = "";
+      this.source =  new URL('../src/taginfo.json', import.meta.url).href;
+      this.currentTag;
+      this.checked = false;
+      this.imageURL = "https://oer.hax.psu.edu/bto108/sites/haxcellence/files/HAX.psu%20World%20changer-circle1.png";
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      this.source =  new URL('../src/taginfo.json', import.meta.url).href;
       this.question = "Which of the following big ideas would YOU associate with this artistic work?";
-      this.image = "https://oer.hax.psu.edu/bto108/sites/haxcellence/files/HAX.psu%20World%20changer-circle1.png";
-      }
 
-    fetchjson() {
-      
+
       const buttonset = [];
-      const source = new URL('../src/taginfo.json', import.meta.url).href;
-      fetch(source)
+      
+      fetch(this.source)
         .then(response => response.json())
         .then((json) =>
               {   const questionSet  = json.questionSet;   
@@ -69,6 +85,8 @@ export class TaggingQuestion extends DDD {
                         button.textContent = index;
                         button.dataset.correct = question.correct;
                         button.dataset.feedback = question.feedback;
+                        button.draggable = true;
+                        button.addEventListener('dragstart', this.handleDragStart.bind(this));
                         buttonset.push(button);
                      }
                     for (let i = buttonset.length - 1; i > 0; i--) { 
@@ -79,6 +97,10 @@ export class TaggingQuestion extends DDD {
                   buttonset.forEach(button => {
                       optionTags.appendChild(button);
 
+                  const slottedImage = this.querySelector('image');
+                  if(slottedImage) {
+                     this.imageURL = slottedImage.src;
+                  }
 
              });                       
        } ) 
@@ -88,27 +110,29 @@ export class TaggingQuestion extends DDD {
 
     render() {
         return html`
-            <div id="question">
+            <div id="question" >
               <slot>${this.question}</slot>
             </div>
           
-          <div id="Instruction">Click on the chip to move from options to your choice. To undo, click on the chip in the choice area</div>     
+          <div id="Instruction">Click or drag the chip to move from options to your choice. You can also undo a chip action or Reset all</div>     
           <div id="actions">
-             <button id = "checkBtn" class="checkBtn" @click=${this.check}>
-                  CHECK
-              </button>
               <button id = "resetBtn" class="resetBtn" @click=${this.reset}>
                   RESET
+              </button>            
+              <button id = "checkBtn" class="checkBtn" @click=${this.check}>
+                  CHECK
               </button>
+
           </div>      
           <confetti-container id="confetti">
-          <img id="image" src=${this.image}>
+          <img id="image" src=${this.imageURL}>
           <div id="optionsTagsArea">Options</div>
-          <div id="optionTags" @click=${this.optionClicked} >
+          <div id="optionTags" @click=${this.optionClicked} @dragover=${this.handleDragOverReverse} @drop=${this.handleDropReverse} >
           </div>
-              
-          <div id="solutionTags" @click=${this.solutionClicked}>
-              <div id="solutionTagsArea">Your Choice</div>
+          <br><br>
+          <div id="solutionTagsArea">Your Choice</div>
+          <div id="solutionTags" @click=${this.solutionClicked} @dragover=${this.handleDragOver} @drop=${this.handleDrop}>              
+              <div id="dropTagHere">  [Drop chip here] &ensp;&ensp;&ensp;<br><br></div>
           </div>
           
           <div id="results"> </div>
@@ -117,6 +141,38 @@ export class TaggingQuestion extends DDD {
       `;
     }
 
+  handleDragStart(event) {
+    event.dataTransfer.setData('text/plain', event.target.textContent);
+    this.currentTag = event.target;
+  }
+  handleDragStartReverse(event) {
+    event.dataTransfer.setData('text/plain', event.target.textContent);
+    this.currentTag = event.target;
+  }
+
+    handleDropReverse(event) {
+      event.preventDefault();
+      const button = this.currentTag;
+      const optionTags = this.shadowRoot.getElementById('optionTags');  
+      button.remove();
+      optionTags.append(button);
+      
+    }
+    handleDrop(event) {
+      event.preventDefault();
+      const button = this.currentTag;
+      const solutionTags = this.shadowRoot.getElementById('solutionTags');  
+      button.remove();
+      solutionTags.append(button);
+    }
+
+    handleDragOver(event) {
+      event.preventDefault();
+    }
+
+    handleDragOverReverse(event) {
+      event.preventDefault();
+    }
 
     solutionClicked(event) {
         this.clickedItem = event.target;
@@ -151,13 +207,13 @@ export class TaggingQuestion extends DDD {
           if(isCorrect){
              tag.style.background = "green";
              tag.title = tag.dataset.feedback;
-             this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:green">${tag.textContent} - ${tag.dataset.feedback}</p>`;
+             this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:green">Correct : ${tag.textContent} - ${tag.dataset.feedback}</p>`;
             }
           else {
              var allCorrect = false;
              tag.style.background = "red";
              tag.title = tag.dataset.feedback;
-             this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:red">${tag.textContent} - ${tag.dataset.feedback}</p>`;
+             this.shadowRoot.querySelector('#results').innerHTML += `<p style="background-color:red">Incorrect : ${tag.textContent} - ${tag.dataset.feedback}</p>`;
           }
         }
 
@@ -192,7 +248,7 @@ export class TaggingQuestion extends DDD {
       for (const tag of solutionTags) {
         tag.remove();
       }            
-      this.fetchjson();
+      this.connectedCallback();
 
     }
 
@@ -220,7 +276,8 @@ export class TaggingQuestion extends DDD {
       static get properties() {
         return {
           question: { type: String},
-          image:{ type: String}
+          source:{type: String},
+          imageURL:{ type: String}
         };
       }  
 
