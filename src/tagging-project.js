@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 //ddd(design,develop,destroy) web component */
-import { DDD } from '../node_modules/@lrnwebcomponents/d-d-d/d-d-d.js';
+import { DDD } from '@lrnwebcomponents/d-d-d';
 
 export class TaggingQuestion extends DDD {
 
@@ -114,7 +114,7 @@ export class TaggingQuestion extends DDD {
               <slot>${this.question}</slot>
             </div>
           
-          <div id="Instruction">Click or drag the chip to move from options to your choice. You can also undo a chip action or Reset all</div>     
+          <div id="Instruction">Click or drag the chip to move from options to your choice. You can  undo a chip action or Reset all</div>     
           <div id="actions">
               <button id = "resetBtn" class="resetBtn" @click=${this.reset}>
                   RESET
@@ -154,16 +154,26 @@ export class TaggingQuestion extends DDD {
       event.preventDefault();
       const button = this.currentTag;
       const optionTags = this.shadowRoot.getElementById('optionTags');  
-      button.remove();
-      optionTags.append(button);
-      
+      const checkBtn = this.shadowRoot.querySelectorAll('.checkBtn');
+      checkBtn.forEach(btn => {
+          if (btn.style.visibility == "" || btn.style.visibility == "visible") {
+            button.remove();
+            optionTags.append(button);   
+          }
+      });      
     }
     handleDrop(event) {
       event.preventDefault();
       const button = this.currentTag;
       const solutionTags = this.shadowRoot.getElementById('solutionTags');  
-      button.remove();
-      solutionTags.append(button);
+      const checkBtn = this.shadowRoot.querySelectorAll('.checkBtn');
+      checkBtn.forEach(btn => {
+          if (btn.style.visibility == "" || btn.style.visibility == "visible") {
+            button.remove();
+            solutionTags.append(button);          
+          }
+      });
+
     }
 
     handleDragOver(event) {
@@ -179,8 +189,13 @@ export class TaggingQuestion extends DDD {
         const optionTags = this.shadowRoot.getElementById('optionTags');
   
         if(this.clickedItem.classList.contains('tags')) {
-          this.clickedItem.remove();
-          optionTags.append(this.clickedItem);
+          const checkBtn = this.shadowRoot.querySelectorAll('.checkBtn');
+          checkBtn.forEach(btn => {
+              if (btn.style.visibility == "" || btn.style.visibility == "visible") {
+                this.clickedItem.remove();
+                optionTags.append(this.clickedItem);
+                }
+              });                  
         }
       
     }
@@ -188,10 +203,14 @@ export class TaggingQuestion extends DDD {
         this.clickedItem = event.target;
         const solutionTags = this.shadowRoot.getElementById('solutionTags');
         if(this.clickedItem.classList.contains('tags')) {
-          this.clickedItem.remove();
-          solutionTags.append(this.clickedItem);
+          const checkBtn = this.shadowRoot.querySelectorAll('.checkBtn');
+          checkBtn.forEach(btn => {
+              if (btn.style.visibility == "" || btn.style.visibility == "visible") {
+                  this.clickedItem.remove();
+                  solutionTags.append(this.clickedItem);
+                }
+              });         
         }
-      
     }
 
     check() {
